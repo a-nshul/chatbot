@@ -1,10 +1,6 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
-import { NextRouter } from 'next/router';
-
-interface ChatbotProps {
-  router: NextRouter;
-}
+import { useRouter } from 'next/navigation'; 
 
 const TypingIndicator: React.FC = () => (
   <div className="flex space-x-1">
@@ -14,7 +10,8 @@ const TypingIndicator: React.FC = () => (
   </div>
 );
 
-const Chatbot: React.FC<ChatbotProps> = ({ router }) => {
+const Chatbot: React.FC = () => {
+  const router = useRouter(); 
   const [messages, setMessages] = useState<{ user: string; bot: string }[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -84,22 +81,26 @@ const Chatbot: React.FC<ChatbotProps> = ({ router }) => {
       </div>
 
       <div className="flex w-full max-w-md mx-auto mt-4">
-          <input
-            type="text"
-            className="text-black flex-grow p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Type your message..."
-          />
-          <button
-            className="p-2 bg-blue-500 text-white rounded-r hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onClick={() => handleSend()}
-          >
-            Send
-          </button>
-        </div>
-
+        <input
+          type="text"
+          className="text-black flex-grow p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+          placeholder="Type your message..."
+        />
+        <button
+          className="p-2 bg-blue-500 text-white rounded-r hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={() => handleSend()}
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 };
